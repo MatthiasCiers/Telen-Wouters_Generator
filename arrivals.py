@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 
-num_participants = 10
+num_participants = 100
 arrival_factor_before_10 = 50  
 arrival_factor_after_4 = 50   
 arrival_factor_closed=5
