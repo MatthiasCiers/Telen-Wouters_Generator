@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 
-num_participants = 100
+transactions = 400
 arrival_factor_before_10 = 50  
 arrival_factor_after_4 = 50   
 arrival_factor_closed=5
@@ -10,7 +10,7 @@ start_year,start_month,start_day=2024,1,1
 end_year,end_month,end_day=2024,1,10
 
 
-def simulate_arrivals(num_participants, start_year,start_month,start_day,end_year,end_month,end_day, arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day ):
+def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day, arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day ):
     arrivals=[]
     
     start_datetime = datetime(start_year, start_month, start_day)
@@ -21,7 +21,7 @@ def simulate_arrivals(num_participants, start_year,start_month,start_day,end_yea
     
         current_day = start_datetime + timedelta(days=day)
 
-        for _ in range(num_participants):
+        for _ in range(transactions):
             arrival_time= random.uniform(0, 24*60*60)
             arrival_datetime = current_day+timedelta(seconds=arrival_time)
 
@@ -41,7 +41,7 @@ def simulate_arrivals(num_participants, start_year,start_month,start_day,end_yea
     return sorted(arrivals)
 
 
-arr = simulate_arrivals(num_participants, start_year,start_month,start_day,end_year,end_month,end_day,  arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day )
+arr = simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day,  arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day )
 
 print("Arrival times:")
 for arrival in arr:
