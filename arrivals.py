@@ -1,7 +1,9 @@
 import random
 from datetime import datetime, timedelta
+import numpy as np
+import pandas as pd
 
-transactions = 400
+transactions = 100
 arrival_factor_before_10 = 50  
 arrival_factor_after_4 = 50   
 arrival_factor_closed=5
@@ -42,6 +44,8 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
 
 
 arr = simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day,  arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day )
+arrivals = pd.DataFrame({'ArrivalTimes': arr})
+
 
 print("Arrival times:")
 for arrival in arr:
