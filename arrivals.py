@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
-transactions = 100
+transactions = 400
 arrival_factor_before_10 = 50  
 arrival_factor_after_4 = 50   
 arrival_factor_closed=5
@@ -23,7 +23,7 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
     
         current_day = start_datetime + timedelta(days=day)
 
-        for _ in range(transactions):
+        while len(arrivals) < transactions:
             arrival_time= random.uniform(0, 24*60*60)
             arrival_datetime = current_day+timedelta(seconds=arrival_time)
 
@@ -74,6 +74,8 @@ print("Morning rush:", len(morning_rush))
 print("evening rush:", len(evening_rush))
 print("opening, no rush", len(opening))
 print("closing: ", len(night))
+print("total: ",len(morning_rush)+len(evening_rush)+len(opening)+len(night))
+print(len(arr))
 print("_________________________________")
 print("Morning rush:", len(morning_rush)/2)
 print("After 4 pm per hour:", len(evening_rush)/2)
