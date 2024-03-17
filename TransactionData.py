@@ -24,7 +24,6 @@ def generate_transaction_data(amount_transactions, amount_participants, amount_s
         
         # Securities transaction
         random_date_1 = random_datetime(start_date, end_date)
-        print(random_date_1)
         Security_number = random.randint(1,amount_securities)
         ''' for example:
         if Security_number == 1: 

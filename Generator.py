@@ -9,11 +9,11 @@ if __name__ == '__main__':
 
     #Initializations
     days_list = ["2024-03-01","2024-03-02"] 
-    amount_transactions = 200 # Amount of DVP transactions per day, x2 transactions/day
-    amount_participants = 25
+    amount_transactions = 400 # Amount of DVP transactions per day, x2 transactions/day
+    amount_participants = 8
     amount_securities = 3
-    min_transaction_value = 100000
-    max_transaction_value = 100000000
+    min_transaction_value = 10000
+    max_transaction_value = 10000000
     min_balance_value = 50000
     max_balance_value = 150000000
 
