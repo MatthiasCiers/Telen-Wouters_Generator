@@ -25,7 +25,6 @@ def generate_transaction_data(amount_transactions, amount_participants, amount_s
         monetary_funds_df = balance_df.loc[(balance_df['Part ID'] == Receiving_ID) & (balance_df['Account ID'] == 0)]
         if not monetary_funds_df.empty:
             balance_value = monetary_funds_df['Balance'].iloc[0]
-            print(balance_value)
         else:
             print("No record found for the given part_id and account_id.")
         transaction_value = generate_transaction_value(balance_value)
