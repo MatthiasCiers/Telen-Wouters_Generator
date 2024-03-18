@@ -28,11 +28,11 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
             arrival_datetime = current_day+timedelta(seconds=arrival_time)
 
             # Calculate arrival rate based on desired number of arrivals per minute
-            if arrival_datetime.time()<datetime(current_day.year, current_day.month,current_day.day,8,0).time() or arrival_datetime.time()>datetime(current_day.year, current_day.month,current_day.day,18,0).time():
+            if arrival_datetime.time()<datetime(current_day.year, current_day.month,current_day.day,0,0).time() or arrival_datetime.time()>datetime(current_day.year, current_day.month,current_day.day,18,0).time():
                 arrival_rate = arrival_factor_closed / 60.0
-            elif arrival_datetime.time() < datetime(current_day.year, current_day.month,current_day.day,10,0).time():
+            elif arrival_datetime.time() < datetime(current_day.year, current_day.month,current_day.day,1,30).time():
                 arrival_rate = arrival_factor_before_10 / 60.0
-            elif arrival_datetime.time() > datetime(current_day.year, current_day.month,current_day.day,16,0).time():
+            elif arrival_datetime.time() > datetime(current_day.year, current_day.month,current_day.day,19,30).time():
                 arrival_rate = arrival_factor_after_4 / 60.0
             else:
                 arrival_rate = arrival_factor_day/60
@@ -40,9 +40,12 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
             if random.uniform(0, 1) < arrival_rate:
                 arrivals.append(arrival_datetime)
 
-    return sorted(arrivals)
+    arrival_output = []
+    for arrival in arrivals:
+        arrival_output.append(arrival.strftime('%Y-%m-%d %H:%M:%S'))
+    return sorted(arrival_output)
 
-
+'''
 arr = simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day,  arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day )
 arrivals = pd.DataFrame({'ArrivalTimes': arr})
 
@@ -50,8 +53,8 @@ arrivals = pd.DataFrame({'ArrivalTimes': arr})
 print("Arrival times:")
 for arrival in arr:
     print(arrival.strftime('%Y-%m-%d %H:%M:%S'))
-
-
+'''
+'''
 #check for differences
 morning_rush = []
 evening_rush = []
@@ -83,3 +86,4 @@ print("After 4 pm per hour:", len(evening_rush)/2)
 print("closing: ", len(night)/14)
 
 
+'''

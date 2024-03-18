@@ -57,6 +57,6 @@ def random_datetime(start_date, end_date):
     return start_date + datetime.timedelta(seconds=random_seconds)
 
 def generate_transaction_value(balance):
-    transaction_value = random.uniform(0.1, 1) * balance
+    transaction_value = random.uniform(0.005, 0.1) * balance
     transaction_value = round(transaction_value,2)
     return transaction_value
