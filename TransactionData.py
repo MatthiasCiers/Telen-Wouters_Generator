@@ -2,7 +2,7 @@ import pandas as pd
 import datetime
 import random
 
-def generate_transaction_data(amount_transactions, amount_participants, amount_securities, days_list, min_transaction_value, max_transaction_value):
+def generate_transaction_data(amount_transactions, amount_participants, amount_securities, days_list, min_transaction_value, max_transaction_value, balance_df):
 
     transaction_df = pd.DataFrame(columns=[ 'TID', 'Time', 'Value', 'FromParticipantId','FromAccountId', 'ToParticipantId','ToAccountId','Linkcode'])
     linkcode = 0
@@ -14,7 +14,7 @@ def generate_transaction_data(amount_transactions, amount_participants, amount_s
     #Fill in dataframe
     for loop_number in range(amount_transactions):
         linkcode +=1
-        transaction_value = random.randint(min_transaction_value,max_transaction_value)
+        #transaction_value = random.randint(min_transaction_value,max_transaction_value)
         Sending_ID = random.randint(1,amount_participants)
         Receiving_ID = random.randint(1,amount_participants)
 
@@ -22,17 +22,17 @@ def generate_transaction_data(amount_transactions, amount_participants, amount_s
             Sending_ID = random.randint(1,amount_participants)
             Receiving_ID = random.randint(1,amount_participants)
         
+        monetary_funds_df = balance_df.loc[(balance_df['Part ID'] == Receiving_ID) & (balance_df['Account ID'] == 0)]
+        if not monetary_funds_df.empty:
+            balance_value = monetary_funds_df['Balance'].iloc[0]
+            print(balance_value)
+        else:
+            print("No record found for the given part_id and account_id.")
+        transaction_value = generate_transaction_value(balance_value)
         # Securities transaction
         random_date_1 = random_datetime(start_date, end_date)
         Security_number = random.randint(1,amount_securities)
-        ''' for example:
-        if Security_number == 1: 
-            Security = 'BOND'
-        if Security_number == 2:
-            Security = 'SHARE1'
-        if Security_number == 3:
-            Security = 'SHARE2'
-        '''
+        
         new_transaction = pd.DataFrame({'Time': random_date_1, 'Value': transaction_value, 'FromParticipantId': Sending_ID,'FromAccountId': Security_number, 'ToParticipantId': Receiving_ID,'ToAccountId': Security_number, 'Linkcode': linkcode}, index=[0])
 
         # Corresponding money transaction
@@ -56,3 +56,8 @@ def random_datetime(start_date, end_date):
     delta = end_date - start_date
     random_seconds = random.randint(0, int(delta.total_seconds()))
     return start_date + datetime.timedelta(seconds=random_seconds)
+
+def generate_transaction_value(balance):
+    transaction_value = random.uniform(0.1, 1) * balance
+    transaction_value = round(transaction_value,2)
+    return transaction_value
