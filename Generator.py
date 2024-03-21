@@ -11,21 +11,21 @@ if __name__ == '__main__':
     #Initializations
     days_list = ["2024-03-01","2024-03-02"] 
     amount_transactions = 1250 # Amount of DVP transactions per day, x2 transactions/day
-    amount_participants = 6
-    amount_securities = 3
+    amount_participants = 8
+    amount_securities = 4
     #min_transaction_value = 100000
     #max_transaction_value = 100000000
     min_balance_value = 1000000
-    max_balance_value = 50000000000
+    max_balance_value = 10000000000
 
     # parameters arrivals
     transactions = 2*1250
-    arrival_factor_before_10 = 50  
-    arrival_factor_after_4 = 50   
+    arrival_factor_before_10 = 80  
+    arrival_factor_after_4 = 80   
     arrival_factor_closed=5
-    arrival_factor_day=20
+    arrival_factor_day=40
     start_year,start_month,start_day=2024,1,1
-    end_year,end_month,end_day=2024,1,10
+    end_year,end_month,end_day=2024,1,2
 
     #Generate participants
     balance_df = ParticipantData.generate_participant_data_modified(amount_participants, amount_securities, min_balance_value, max_balance_value)

@@ -28,11 +28,11 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
             arrival_datetime = current_day+timedelta(seconds=arrival_time)
 
             # Calculate arrival rate based on desired number of arrivals per minute
-            if arrival_datetime.time()<datetime(current_day.year, current_day.month,current_day.day,0,0).time() or arrival_datetime.time()>datetime(current_day.year, current_day.month,current_day.day,18,0).time():
+            if arrival_datetime.time()<datetime(current_day.year, current_day.month,current_day.day,1,30).time() or arrival_datetime.time()>datetime(current_day.year, current_day.month,current_day.day,19,30).time():
                 arrival_rate = arrival_factor_closed / 60.0
-            elif arrival_datetime.time() < datetime(current_day.year, current_day.month,current_day.day,1,30).time():
+            elif arrival_datetime.time() < datetime(current_day.year, current_day.month,current_day.day,3,30).time():
                 arrival_rate = arrival_factor_before_10 / 60.0
-            elif arrival_datetime.time() > datetime(current_day.year, current_day.month,current_day.day,19,30).time():
+            elif arrival_datetime.time() > datetime(current_day.year, current_day.month,current_day.day,17,30).time():
                 arrival_rate = arrival_factor_after_4 / 60.0
             else:
                 arrival_rate = arrival_factor_day/60
