@@ -36,7 +36,8 @@ def generate_participant_data_modified(amount_participants, amount_securities, m
 
         part_condition = (balance_df['Part ID'] == participant)
         acc_condition = (balance_df['Account ID'] == 0)
-        balance_value = round(random.uniform(0.02, 0.1) * total_securities_part, 2)
+        cash_percentage = random.uniform(0.02, 0.1)
+        balance_value = round((cash_percentage/(1-cash_percentage)) * total_securities_part, 2)
         balance_df.loc[part_condition & acc_condition, 'Balance'] = balance_value
         credit_limit =  round(random.uniform(0.25, 1) * balance_value, 2)
         balance_df.loc[part_condition & acc_condition, 'Credit limit'] = credit_limit
