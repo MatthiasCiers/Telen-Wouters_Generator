@@ -2,7 +2,7 @@ import pandas as pd
 import datetime
 import random
 
-def generate_transaction_data(amount_transactions, amount_participants, amount_securities, days_list, min_transaction_value, max_transaction_value, balance_df):
+def generate_transaction_data(amount_transactions, amount_participants, amount_securities, days_list, balance_df):
 
     transaction_df = pd.DataFrame(columns=[ 'TID', 'Time', 'Value', 'FromParticipantId','FromAccountId', 'ToParticipantId','ToAccountId','Linkcode'])
     linkcode = 0
