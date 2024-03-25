@@ -17,15 +17,19 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
     
     start_datetime = datetime(start_year, start_month, start_day)
     end_datetime = datetime(end_year, end_month, end_day)
+    number_of_days=(end_datetime - start_datetime).days + 1
+    transactions_per_day=transactions/number_of_days
+    
+
 
     for day in range((end_datetime - start_datetime).days + 1):
-
-    
         current_day = start_datetime + timedelta(days=day)
+        transactions_count = 0
 
-        while len(arrivals) < transactions:
+        while transactions_count < transactions_per_day:
             arrival_time= random.uniform(0, 24*60*60)
             arrival_datetime = current_day+timedelta(seconds=arrival_time)
+
 
             # Calculate arrival rate based on desired number of arrivals per minute
             if arrival_datetime.time()<datetime(current_day.year, current_day.month,current_day.day,1,30).time() or arrival_datetime.time()>datetime(current_day.year, current_day.month,current_day.day,19,30).time():
@@ -39,6 +43,9 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
 
             if random.uniform(0, 1) < arrival_rate:
                 arrivals.append(arrival_datetime)
+                transactions_count += 1 
+            if transactions_count >= transactions:
+                break
 
     arrival_output = []
     for arrival in arrivals:
