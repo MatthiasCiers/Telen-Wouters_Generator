@@ -20,7 +20,7 @@ if __name__ == '__main__':
     '''
     #Initializations
     days_list = ["2024-03-01","2024-03-02"] 
-    amount_transactions = 1250 # Amount of DVP transactions per day, x2 transactions/day
+    amount_transactions = 1250 # Total number of DVP transactions , x2 instructions
     amount_participants = 8
     amount_securities = 4
     #min_transaction_value = 100000
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     arrival_factor_closed=5
     arrival_factor_day=40
     start_year,start_month,start_day=2024,1,1
-    end_year,end_month,end_day=2024,1,2
+    end_year,end_month,end_day=2024,1,10
 
     #Log input parameters
     parameters_dataframe = pd.DataFrame({ 'amount transactions': amount_transactions,'amount participants': amount_participants, 'amount securities': amount_securities, 'min balance value': min_balance_value, 'max balance value':max_balance_value}, index=[0])  
