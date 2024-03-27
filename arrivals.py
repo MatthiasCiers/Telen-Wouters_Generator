@@ -11,6 +11,7 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
     start_datetime = datetime(start_year, start_month, start_day)
     end_datetime = datetime(end_year, end_month, end_day)
     number_of_days=(end_datetime - start_datetime).days + 1
+    print(number_of_days)
     transactions_per_day=transactions/number_of_days
     
 
