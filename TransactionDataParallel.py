@@ -1,20 +1,29 @@
 import pandas as pd
+import numpy as np
 import random
 import datetime
 from concurrent.futures import ProcessPoolExecutor
 
-def generate_transactions_portion(start_date, end_date, amount_participants, amount_securities, transactions_per_process, balance_df, starting_linkcode):
+def generate_transactions_portion(weights_matrix, start_date, end_date, amount_participants, amount_securities, transactions_per_process, balance_df, starting_linkcode):
     transactions = []
     linkcode = starting_linkcode  # Initialize with the starting value
     
+    
     for _ in range(transactions_per_process):
         linkcode += 1
+        Sending_ID = random.randint(0, amount_participants - 1)
+        receiver_weights = weights_matrix[Sending_ID]
+        Receiving_ID = random.choices(range(amount_participants), receiver_weights)[0]
+        Sending_ID = Sending_ID + 1
+        Receiving_ID = Receiving_ID + 1
+
+        '''
         Sending_ID = random.randint(1, amount_participants)
         Receiving_ID = random.randint(1, amount_participants)
 
         while Sending_ID == Receiving_ID:
             Sending_ID = random.randint(1, amount_participants)
-            Receiving_ID = random.randint(1, amount_participants)
+            Receiving_ID = random.randint(1, amount_participants)'''
 
         monetary_funds_df = balance_df.loc[(balance_df['Part ID'] == Receiving_ID) & (balance_df['Account ID'] == 0)]
         balance_value = monetary_funds_df['Balance'].iloc[0] if not monetary_funds_df.empty else 0
@@ -91,9 +100,11 @@ def generate_transaction_data_parallel(amount_transactions, amount_participants,
     
     datetime_list = [datetime.datetime.strptime(day, "%Y-%m-%d") for day in days_list]
     start_date, end_date = min(datetime_list), max(datetime_list)
+    weights_matrix = generate_symmetric_weight_matrix(amount_participants)
+    print(weights_matrix)
     
     # Calculate starting linkcodes for each process
-    args = [(start_date, end_date, amount_participants, amount_securities, transactions_per_process, balance_df.copy(), i * transactions_per_process + 1) for i in range(num_processes)]
+    args = [(weights_matrix, start_date, end_date, amount_participants, amount_securities, transactions_per_process, balance_df.copy(), i * transactions_per_process + 1) for i in range(num_processes)]
     
     transactions = []
     with ProcessPoolExecutor(max_workers=num_processes) as executor:
@@ -139,3 +150,38 @@ def generate_transaction_value(balance):
     transaction_value = random.uniform(0.005, 0.1) * balance
     transaction_value = round(transaction_value,2)
     return transaction_value
+
+def generate_weight_matrix(size):
+    # Initialize an empty matrix with zeros
+    matrix = np.zeros((size, size))
+    
+    for i in range(size):
+        # Generate `size - 1` random numbers for each row, excluding the diagonal
+        weights = np.random.rand(size - 1)
+        # Normalize these weights to sum up to 1
+        normalized_weights = weights / np.sum(weights)
+        
+        # Insert normalized weights into the matrix, skipping the diagonal
+        matrix[i, :i] = normalized_weights[:i]
+        matrix[i, i+1:] = normalized_weights[i:]
+    
+    return matrix
+
+def generate_symmetric_weight_matrix(size):
+    # Initialize an empty matrix with zeros
+    matrix = np.zeros((size, size))
+    
+    for i in range(size):
+        for j in range(i + 1, size):
+            # Generate a single random number for each pair and set both (i, j) and (j, i)
+            weight = np.random.rand()
+            matrix[i, j] = weight
+            matrix[j, i] = weight
+    
+    # Normalize rows excluding the diagonal to ensure row sums (excluding diagonal) are 1
+    for i in range(size):
+        row_sum = np.sum(matrix[i]) - matrix[i, i]  # Exclude the diagonal value from the sum
+        matrix[i] /= row_sum  # Normalize the row
+        matrix[i, i] = 0  # Ensure the diagonal is 0 after normalization
+    
+    return matrix

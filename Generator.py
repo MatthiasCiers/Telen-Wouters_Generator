@@ -20,10 +20,10 @@ if __name__ == '__main__':
         sys.exit("Please provide ID of the parameters output file! See --help")
     '''
     #Initializations
-    days_list = ["2024-03-01","2024-03-02"] 
-    amount_transactions = 500 # Amount of DVP transactions per day, x2 transactions/day
-    amount_participants = 8
-    amount_securities = 4
+    days_list = ["2024-03-04","2024-03-08"] 
+    amount_transactions = 50 # Amount of DVP transactions per day, x2 transactions/day
+    amount_participants = 5
+    amount_securities = 8
     #min_transaction_value = 100000
     #max_transaction_value = 100000000
     min_balance_value = 1000000
