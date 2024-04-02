@@ -67,7 +67,7 @@ def generate_transactions_portion(start_date, end_date, amount_participants, amo
             'ToParticipantId': Receiving_ID,
             'ToAccountId': Security_number, 
             'Linkcode': linkcode,
-            'Settlement Deadline': deadline_date
+            'SettlementDeadline': deadline_date
         }
         
         new_counter_transaction = {
@@ -78,7 +78,7 @@ def generate_transactions_portion(start_date, end_date, amount_participants, amo
             'ToParticipantId': Sending_ID,
             'ToAccountId': 0, 
             'Linkcode': linkcode,
-            'Settlement Deadline': deadline_date
+            'SettlementDeadline': deadline_date
         }
         
         transactions.extend([new_transaction, new_counter_transaction])

@@ -1,2 +1,2 @@
 amount transactions;amount participants;amount securities;min balance value;max balance value
-60;8;4;1000000;10000000000
+500;8;4;1000000;10000000000
