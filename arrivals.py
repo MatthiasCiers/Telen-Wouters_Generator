@@ -4,6 +4,17 @@ import numpy as np
 import pandas as pd
 
 
+# parameters arrivals
+transactions = 2*60
+arrival_factor_before_10 = 80  
+arrival_factor_after_4 = 80   
+arrival_factor_closed=5
+arrival_factor_day=40
+start_year,start_month,start_day=2024,1,1
+end_year,end_month,end_day=2024,1,3
+
+
+
 
 def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day, arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day ):
     arrivals=[]
@@ -11,7 +22,6 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
     start_datetime = datetime(start_year, start_month, start_day)
     end_datetime = datetime(end_year, end_month, end_day)
     number_of_days=(end_datetime - start_datetime).days + 1
-    print(number_of_days)
     transactions_per_day=transactions/number_of_days
     
 
@@ -43,7 +53,29 @@ def simulate_arrivals(transactions, start_year,start_month,start_day,end_year,en
     arrival_output = []
     for arrival in arrivals:
         arrival_output.append(arrival.strftime('%Y-%m-%d %H:%M:%S'))
-    return sorted(arrival_output)
+    arrival_output = sorted(arrival_output)
+    date_output = [datetime_str.split(' ')[0] for datetime_str in arrival_output]
+    deadlines_list = [adjust_date(datetime_str) for datetime_str in arrival_output]
+
+    return arrival_output, deadlines_list
+
+
+def adjust_date(datetime_str):
+    # Convert string to datetime object
+    date = datetime.strptime(datetime_str.split(' ')[0], '%Y-%m-%d')
+    # Generate a random number and decide the outcome
+    rand_choice = random.randint(1, 2)
+    if rand_choice == 2:
+        # Move to the next day
+        date += timedelta(days=1)
+    #elif rand_choice == 3:
+        # Move to the day after the next day
+        #date += timedelta(days=2)
+    # No else needed for rand_choice == 1, as it means keep the date the same
+    
+    # Convert back to string and return
+    return date.strftime('%Y-%m-%d')
+
 
 '''
 arr = simulate_arrivals(transactions, start_year,start_month,start_day,end_year,end_month,end_day,  arrival_factor_before_10, arrival_factor_after_4,arrival_factor_closed,arrival_factor_day )
