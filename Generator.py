@@ -21,8 +21,8 @@ if __name__ == '__main__':
     '''
     #Initializations
     days_list = ["2024-03-04","2024-03-08"] 
-    amount_transactions = 50 # Amount of DVP transactions per day, x2 transactions/day
-    amount_participants = 5
+    amount_transactions = 7500 # Amount of DVP transactions per day, x2 transactions/day
+    amount_participants = 30
     amount_securities = 8
     #min_transaction_value = 100000
     #max_transaction_value = 100000000

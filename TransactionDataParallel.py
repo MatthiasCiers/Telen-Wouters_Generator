@@ -101,7 +101,7 @@ def generate_transaction_data_parallel(amount_transactions, amount_participants,
     datetime_list = [datetime.datetime.strptime(day, "%Y-%m-%d") for day in days_list]
     start_date, end_date = min(datetime_list), max(datetime_list)
     weights_matrix = generate_symmetric_weight_matrix(amount_participants)
-    print(weights_matrix)
+    
     
     # Calculate starting linkcodes for each process
     args = [(weights_matrix, start_date, end_date, amount_participants, amount_securities, transactions_per_process, balance_df.copy(), i * transactions_per_process + 1) for i in range(num_processes)]
@@ -183,5 +183,6 @@ def generate_symmetric_weight_matrix(size):
         row_sum = np.sum(matrix[i]) - matrix[i, i]  # Exclude the diagonal value from the sum
         matrix[i] /= row_sum  # Normalize the row
         matrix[i, i] = 0  # Ensure the diagonal is 0 after normalization
-    
+    print(matrix)
     return matrix
+    
