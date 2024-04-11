@@ -20,7 +20,7 @@ if __name__ == '__main__':
         sys.exit("Please provide ID of the parameters output file! See --help")
     '''
     #Initializations
-    days_list = ["2024-03-04","2024-03-08"] 
+    days_list = ["2024-03-02","2024-03-08"] 
     amount_transactions = 7500 # Amount of DVP transactions per day, x2 transactions/day
     amount_participants = 30
     amount_securities = 8
@@ -37,6 +37,12 @@ if __name__ == '__main__':
     balance_df = ParticipantData.generate_participant_data_modified(amount_participants, amount_securities, min_balance_value, max_balance_value)
     #Generate transactions
     transaction_df = TransactionDataParallel.generate_transaction_data_parallel(amount_transactions, amount_participants, amount_securities, days_list, balance_df)
+
+    #preprocess warm-up period:
+
+    transaction_df = transaction_df[~((transaction_df['Time'].dt.date == pd.to_datetime("2024-03-02").date()) & (transaction_df['T+x'].isin([0, 1])))]
+    transaction_df = transaction_df[~((transaction_df['Time'].dt.date == pd.to_datetime("2024-03-03").date()) & (transaction_df['T+x'].isin([0])))]
+
 
     #Export  as CSV
     transaction_df.to_csv("TRANSACTION1.csv", index=False, sep=';')

@@ -36,22 +36,22 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
 
         # New code to generate random_date_2 based on random_date_1
         offsets_counter = [-1, 0, 1]  # Possible offsets: day before, same day, day after
-        weights_counter = [0.1, 0.8, 0.1]  # Corresponding weights for each offset
+        weights_counter = [0.1, 0.7, 0.3]  # Corresponding weights for each offset
 
         # Choose an offset
         offset_choice_counter = random.choices(offsets_counter, weights=weights_counter)[0]
 
         # Compute random_date_2 by adding the chosen offset to random_date_1
         # Make sure that random_date_2 is within the range [start_date, end_date]
-        if offset_choice_counter == -1 and random_date_1 > start_date:
-            random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
-        elif offset_choice_counter == 1 and random_date_1 < end_date:
+        #if offset_choice_counter == -1 and random_date_1 > start_date:
+        #    random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
+        if offset_choice_counter == 1 and random_date_1 < end_date:
             random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
         else:
             random_date_2 = random_date_1  # Default to same day if outside range
 
         offset_deadline = [0, 1, 2]
-        weights_deadline = [0.5, 0.4, 0.1]
+        weights_deadline = [0, 15, 85] #[0.5, 0.4, 0.1] [0.2,0.3,0.5]
 
         offset_choice_deadline = random.choices(offset_deadline, weights=weights_deadline)[0]
         earliest_date = min(random_date_1, random_date_2)
@@ -76,7 +76,8 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
             'ToParticipantId': Receiving_ID,
             'ToAccountId': Security_number, 
             'Linkcode': linkcode,
-            'SettlementDeadline': deadline_date
+            'SettlementDeadline': deadline_date,
+            'T+x': offset_choice_deadline
         }
         
         new_counter_transaction = {
@@ -87,7 +88,8 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
             'ToParticipantId': Sending_ID,
             'ToAccountId': 0, 
             'Linkcode': linkcode,
-            'SettlementDeadline': deadline_date
+            'SettlementDeadline': deadline_date,
+            'T+x': offset_choice_deadline
         }
         
         transactions.extend([new_transaction, new_counter_transaction])
@@ -124,12 +126,12 @@ def random_datetime(start_date, end_date):
     random_seconds = random.randint(0, int(delta.total_seconds()))
     return start_date + datetime.timedelta(seconds=random_seconds)
 
-def weighted_random_datetime(start_date): #, end_date
+def weighted_random_datetime1(start_date): #, end_date
 
     intervals = [
         (datetime.time(0, 0, 0), datetime.time(1, 29, 59), 1), 
-        (datetime.time(1, 30, 0), datetime.time(19, 29,59), 4),  
-        (datetime.time(19, 30, 0), datetime.time(23, 59, 59), 1)  
+        (datetime.time(1, 30, 0), datetime.time(19, 29,59), 1),  
+        (datetime.time(19, 30, 0), datetime.time(23, 59, 59), 1)
     ]
     weights = [interval[2] for interval in intervals]
     
@@ -143,7 +145,8 @@ def weighted_random_datetime(start_date): #, end_date
     
     # Compute delta and generate random seconds within the interval
     delta = end_interval_datetime - start_interval_datetime
-    random_seconds = random.randint(0, int(delta.total_seconds()))
+    #random_seconds = random.randint(0, int(delta.total_seconds()))
+    random_seconds = random.randint(0,68400)
     return start_interval_datetime + datetime.timedelta(seconds=random_seconds)
 
 def generate_transaction_value(balance):
@@ -183,6 +186,47 @@ def generate_symmetric_weight_matrix(size):
         row_sum = np.sum(matrix[i]) - matrix[i, i]  # Exclude the diagonal value from the sum
         matrix[i] /= row_sum  # Normalize the row
         matrix[i, i] = 0  # Ensure the diagonal is 0 after normalization
-    print(matrix)
+    #print(matrix)
     return matrix
     
+
+def weighted_random_datetime(start_interval_datetime):
+    # Time boundaries in seconds since start of the day
+    start_of_day = 0  # 0:00 AM
+    interval1_end = 1 * 60 * 60 + 30 * 60  # 1:30 AM
+    interval2_end = 19 * 60 * 60 + 30 * 60  # 7:30 PM
+    end_of_day = 24 * 60 * 60  # 24:00
+
+    # Length of each period in seconds
+    period1_length = interval1_end - start_of_day
+    period2_length = interval2_end - interval1_end
+    period3_length = end_of_day - interval2_end
+
+    # Adjust period 2 length for increased chance
+    # Example factor: 2 (making it twice as likely per hour compared to the others)
+    adjusted_period2_length = period2_length * 5
+
+    # Calculate adjusted total length
+    adjusted_total_length = period1_length + adjusted_period2_length + period3_length
+
+    # Probability of choosing each period (proportional to its adjusted length)
+    p1 = period1_length / adjusted_total_length
+    p2 = adjusted_period2_length / adjusted_total_length
+    p3 = period3_length / adjusted_total_length
+
+    # Choose a random float from 0 to 1 to determine the interval
+    rand_choice = random.random()
+    
+    # Determine in which interval this choice falls
+    if rand_choice < p1:
+        # First period
+        chosen_seconds = random.randint(start_of_day, interval1_end)
+    elif rand_choice < p1 + p2:
+        # Second period, with increased chance
+        chosen_seconds = random.randint(interval1_end, interval2_end)
+    else:
+        # Third period
+        chosen_seconds = random.randint(interval2_end, end_of_day)
+    
+    # Return the datetime with added seconds
+    return start_interval_datetime + datetime.timedelta(seconds=chosen_seconds)
