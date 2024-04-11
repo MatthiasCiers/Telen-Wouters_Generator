@@ -17,14 +17,6 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
         Sending_ID = Sending_ID + 1
         Receiving_ID = Receiving_ID + 1
 
-        '''
-        Sending_ID = random.randint(1, amount_participants)
-        Receiving_ID = random.randint(1, amount_participants)
-
-        while Sending_ID == Receiving_ID:
-            Sending_ID = random.randint(1, amount_participants)
-            Receiving_ID = random.randint(1, amount_participants)'''
-
         monetary_funds_df = balance_df.loc[(balance_df['Part ID'] == Receiving_ID) & (balance_df['Account ID'] == 0)]
         balance_value = monetary_funds_df['Balance'].iloc[0] if not monetary_funds_df.empty else 0
         transaction_value = generate_transaction_value(balance_value)
@@ -36,7 +28,7 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
 
         # New code to generate random_date_2 based on random_date_1
         offsets_counter = [-1, 0, 1]  # Possible offsets: day before, same day, day after
-        weights_counter = [0.1, 0.7, 0.3]  # Corresponding weights for each offset
+        weights_counter = [0, 0.7, 0.3]  # Corresponding weights for each offset
 
         # Choose an offset
         offset_choice_counter = random.choices(offsets_counter, weights=weights_counter)[0]
@@ -64,8 +56,8 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
             deadline_date = earliest_date + datetime.timedelta(days=offset_choice_deadline)
         
 
-        random_insertion_1 = weighted_random_datetime(random_date_1) #, end_date
-        random_insertion_2 = weighted_random_datetime(random_date_2) #, end_date
+        random_insertion_1 = weighted_random_datetime(random_date_1)
+        random_insertion_2 = weighted_random_datetime(random_date_2) 
         Security_number = random.randint(1, amount_securities)
         
         new_transaction = {
@@ -126,29 +118,6 @@ def random_datetime(start_date, end_date):
     random_seconds = random.randint(0, int(delta.total_seconds()))
     return start_date + datetime.timedelta(seconds=random_seconds)
 
-def weighted_random_datetime1(start_date): #, end_date
-
-    intervals = [
-        (datetime.time(0, 0, 0), datetime.time(1, 29, 59), 1), 
-        (datetime.time(1, 30, 0), datetime.time(19, 29,59), 1),  
-        (datetime.time(19, 30, 0), datetime.time(23, 59, 59), 1)
-    ]
-    weights = [interval[2] for interval in intervals]
-    
-    # Select an interval based on the weights
-    selected_interval = random.choices(intervals, weights=weights, k=1)[0]
-    
-    # Generate a random datetime within the selected interval
-    start_interval_time, end_interval_time, _ = selected_interval
-    start_interval_datetime = datetime.datetime.combine(start_date, start_interval_time)
-    end_interval_datetime = datetime.datetime.combine(start_date, end_interval_time)
-    
-    # Compute delta and generate random seconds within the interval
-    delta = end_interval_datetime - start_interval_datetime
-    #random_seconds = random.randint(0, int(delta.total_seconds()))
-    random_seconds = random.randint(0,68400)
-    return start_interval_datetime + datetime.timedelta(seconds=random_seconds)
-
 def generate_transaction_value(balance):
     transaction_value = random.uniform(0.005, 0.1) * balance
     transaction_value = round(transaction_value,2)
@@ -187,6 +156,9 @@ def generate_symmetric_weight_matrix(size):
         matrix[i] /= row_sum  # Normalize the row
         matrix[i, i] = 0  # Ensure the diagonal is 0 after normalization
     #print(matrix)
+    df = pd.DataFrame(matrix)
+    csv_filename = "symmetric_weight_matrix.csv"
+    df.to_csv(csv_filename, index=False)
     return matrix
     
 
