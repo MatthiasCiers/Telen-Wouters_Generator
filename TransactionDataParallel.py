@@ -11,11 +11,20 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
     
     for _ in range(transactions_per_process):
         linkcode += 1
+
+        '''
         Sending_ID = random.randint(0, amount_participants - 1)
         receiver_weights = weights_matrix[Sending_ID]
         Receiving_ID = random.choices(range(amount_participants), receiver_weights)[0]
         Sending_ID = Sending_ID + 1
-        Receiving_ID = Receiving_ID + 1
+        Receiving_ID = Receiving_ID + 1'''
+
+        Sending_ID = random.randint(1, amount_participants)
+        Receiving_ID = random.randint(1, amount_participants)
+
+        while Sending_ID == Receiving_ID:
+            Sending_ID = random.randint(1, amount_participants)
+            Receiving_ID = random.randint(1, amount_participants)
 
         monetary_funds_df = balance_df.loc[(balance_df['Part ID'] == Receiving_ID) & (balance_df['Account ID'] == 0)]
         balance_value = monetary_funds_df['Balance'].iloc[0] if not monetary_funds_df.empty else 0
@@ -94,7 +103,8 @@ def generate_transaction_data_parallel(amount_transactions, amount_participants,
     
     datetime_list = [datetime.datetime.strptime(day, "%Y-%m-%d") for day in days_list]
     start_date, end_date = min(datetime_list), max(datetime_list)
-    weights_matrix = generate_symmetric_weight_matrix(amount_participants)
+    #weights_matrix = generate_symmetric_weight_matrix(amount_participants)
+    weights_matrix = read_weight_matrix()
     
     
     # Calculate starting linkcodes for each process
@@ -119,7 +129,7 @@ def random_datetime(start_date, end_date):
     return start_date + datetime.timedelta(seconds=random_seconds)
 
 def generate_transaction_value(balance):
-    transaction_value = random.uniform(0.005, 0.1) * balance
+    transaction_value = random.uniform(0.01, 0.07) * balance
     transaction_value = round(transaction_value,2)
     return transaction_value
 
@@ -161,6 +171,17 @@ def generate_symmetric_weight_matrix(size):
     df.to_csv(csv_filename, index=False)
     return matrix
     
+def read_weight_matrix():
+    # Read the CSV file into a DataFrame
+    csv_filename = "custom_weight_matrix.csv"
+    df = pd.read_csv(csv_filename)
+    
+    # Convert the DataFrame to a NumPy array
+    matrix = df.values
+    
+    return matrix
+
+
 
 def weighted_random_datetime(start_interval_datetime):
     # Time boundaries in seconds since start of the day
