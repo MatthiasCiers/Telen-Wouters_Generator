@@ -8,7 +8,7 @@ import random
 if __name__ == '__main__':
 
     #Initializations
-    days_list = ["2024-03-02","2024-03-09"] # first 2 days warm-up, last day cool-down
+    days_list = ["2024-03-02","2024-03-10"] # first 2 days warm-up, last day cool-down
     amount_transactions = 1500 # Amount of DVP transactions per day, x2 transactions/day
     amount_participants = 8
     amount_securities = 8
