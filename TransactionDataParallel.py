@@ -36,17 +36,17 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
         random_date_1 = start_date + datetime.timedelta(days=random_days)
 
         # New code to generate random_date_2 based on random_date_1
-        offsets_counter = [-1, 0, 1]  # Possible offsets: day before, same day, day after
-        weights_counter = [0, 0.7, 0.3]  # Corresponding weights for each offset
+        offsets_counter = [0, 1, 2]  # Possible offsets: day before, same day, day after
+        weights_counter = [0.7, 0.25, 0.05]  # Corresponding weights for each offset
 
         # Choose an offset
         offset_choice_counter = random.choices(offsets_counter, weights=weights_counter)[0]
 
         # Compute random_date_2 by adding the chosen offset to random_date_1
         # Make sure that random_date_2 is within the range [start_date, end_date]
-        #if offset_choice_counter == -1 and random_date_1 > start_date:
-        #    random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
-        if offset_choice_counter == 1 and random_date_1 < end_date:
+        if offset_choice_counter == 1: #and random_date_1 > start_date:
+            random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
+        if offset_choice_counter == 2 and random_date_1 < end_date:
             random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
         else:
             random_date_2 = random_date_1  # Default to same day if outside range
