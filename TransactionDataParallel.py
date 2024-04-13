@@ -44,12 +44,12 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
 
         # Compute random_date_2 by adding the chosen offset to random_date_1
         # Make sure that random_date_2 is within the range [start_date, end_date]
-        if offset_choice_counter == 1: #and random_date_1 > start_date:
-            random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
-        if offset_choice_counter == 2 and random_date_1 < end_date:
-            random_date_2 = random_date_1 + datetime.timedelta(days=offset_choice_counter)
+        if offset_choice_counter == 2 and random_date_1 + datetime.timedelta(days=2) <= end_date:
+            random_date_2 = random_date_1 + datetime.timedelta(days=2)
+        elif offset_choice_counter == 1 and random_date_1 + datetime.timedelta(days=1) <= end_date:
+            random_date_2 = random_date_1 + datetime.timedelta(days=1)
         else:
-            random_date_2 = random_date_1  # Default to same day if outside range
+            random_date_2 = random_date_1 # Default to same day if outside range
 
         offset_deadline = [0, 1, 2]
         weights_deadline = [0, 15, 85] #[0.5, 0.4, 0.1] [0.2,0.3,0.5]
@@ -104,7 +104,8 @@ def generate_transaction_data_parallel(amount_transactions, amount_participants,
     datetime_list = [datetime.datetime.strptime(day, "%Y-%m-%d") for day in days_list]
     start_date, end_date = min(datetime_list), max(datetime_list)
     #weights_matrix = generate_symmetric_weight_matrix(amount_participants)
-    weights_matrix = read_weight_matrix()
+    #weights_matrix = read_weight_matrix()
+    weights_matrix = 0
     
     
     # Calculate starting linkcodes for each process
