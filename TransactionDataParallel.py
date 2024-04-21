@@ -52,7 +52,7 @@ def generate_transactions_portion(weights_matrix, start_date, end_date, amount_p
             random_date_2 = random_date_1 # Default to same day if outside range
 
         offset_deadline = [0, 1, 2]
-        weights_deadline = [0, 15, 85] #[0.5, 0.4, 0.1] [0.2,0.3,0.5]
+        weights_deadline = [0.2, 0.8, 0] #[0.5, 0.4, 0.1] [0.2,0.3,0.5]
 
         offset_choice_deadline = random.choices(offset_deadline, weights=weights_deadline)[0]
         earliest_date = min(random_date_1, random_date_2)
