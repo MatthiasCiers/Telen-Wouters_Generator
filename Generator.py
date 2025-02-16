@@ -33,4 +33,6 @@ if __name__ == '__main__':
     #Export  as CSV
     transaction_df.to_csv("TRANSACTION1.csv", index=False, sep=';')
     balance_df.to_csv("PARTICIPANTS1.csv", index=False, sep=';')
-    
+
+
+#tqesttetmset
